@@ -51,7 +51,7 @@ Custom web UI integrating Ollama and ComfyUI with retro skateboard aesthetic (Po
 
 # Bones Brigade Control Deck - Complete Specification
 
-You are Claude acting as a senior full-stack engineer. Build a Mac-friendly local "Bones Brigade Control Deck" UI that integrates Ollama (local LLM) and ComfyUI (Stable Diffusion). I'm on Mac Silicon. ComfyUI is installed and running; Ollama will be installed and running locally.
+Build a Mac-friendly local "Bones Brigade Control Deck" UI that integrates Ollama (local LLM) and ComfyUI (Stable Diffusion). Target: Mac Silicon. ComfyUI is installed and running; Ollama will be installed and running locally.
 
 ## Goals
 
