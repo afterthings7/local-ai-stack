@@ -12,8 +12,14 @@ Node-based UI for Stable Diffusion image generation.
 - **Web UI**: http://127.0.0.1:8188
 - **PyTorch**: 2.9.1 with MPS (Metal Performance Shaders) support
 
-### Ollama (Coming Soon)
+### Ollama
 Local LLM inference server.
+
+- **Version**: 0.13.3
+- **Service**: `brew services start/stop ollama`
+- **API**: http://127.0.0.1:11434
+- **Models**: Stored in `~/.ollama/models/`
+- **Installed**: llama3.2:1b (test model)
 
 ## Directory Structure
 
@@ -33,6 +39,20 @@ local-ai-stack/
 cd ~/local-ai-stack/ComfyUI
 ./launch.sh
 # Open http://127.0.0.1:8188
+```
+
+### Ollama
+```bash
+# Start service (auto-starts on login)
+brew services start ollama
+
+# Run a model
+ollama run llama3.2:1b "Your prompt here"
+
+# Pull more models
+ollama pull llama3.2      # 3B model
+ollama pull codellama     # Code-focused
+ollama pull mistral       # Good all-rounder
 ```
 
 ## System Requirements
