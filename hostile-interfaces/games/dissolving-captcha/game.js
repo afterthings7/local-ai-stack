@@ -33,13 +33,13 @@ const confusables = {
     'Z': '2', '2': 'Z'
 };
 
-// Level configurations
+// Level configurations - dissolveDelay is time before first char starts fading
 const levels = [
-    { length: 5, dissolveDelay: 5000, dissolveSpeed: 2000, effects: ['fade'] },
-    { length: 5, dissolveDelay: 4000, dissolveSpeed: 1800, effects: ['dissolve'] },
-    { length: 6, dissolveDelay: 3500, dissolveSpeed: 1500, effects: ['dissolve', 'glitch'] },
-    { length: 6, dissolveDelay: 3000, dissolveSpeed: 1200, effects: ['dissolve', 'scramble'] },
-    { length: 7, dissolveDelay: 2500, dissolveSpeed: 1000, effects: ['dissolve', 'glitch', 'scramble'] }
+    { length: 5, dissolveDelay: 2500, dissolveSpeed: 1500, effects: ['fade'] },
+    { length: 5, dissolveDelay: 2000, dissolveSpeed: 1200, effects: ['dissolve'] },
+    { length: 6, dissolveDelay: 1800, dissolveSpeed: 1000, effects: ['dissolve', 'glitch'] },
+    { length: 6, dissolveDelay: 1500, dissolveSpeed: 800, effects: ['dissolve', 'scramble'] },
+    { length: 7, dissolveDelay: 1200, dissolveSpeed: 600, effects: ['dissolve', 'glitch', 'scramble'] }
 ];
 
 // Error messages
@@ -66,8 +66,8 @@ function init() {
         if (e.key === 'Enter') verify();
     });
 
-    // Start dissolving when user focuses input
-    captchaInput.addEventListener('focus', startDissolving);
+    // Auto-start dissolving after a brief moment
+    setTimeout(startDissolving, 1000);
 }
 
 function generateCaptcha() {
@@ -87,6 +87,9 @@ function generateCaptcha() {
     captchaInput.value = '';
     feedback.className = 'feedback';
     timerWarning.classList.remove('visible');
+
+    // Auto-start dissolving after a brief moment
+    setTimeout(startDissolving, 500);
 }
 
 function renderCaptcha() {
@@ -131,10 +134,11 @@ function startDissolving() {
     const config = levels[Math.min(level - 1, levels.length - 1)];
     const chars = captchaText.querySelectorAll('.captcha-char');
 
-    // Show warning before dissolving
+    // Show warning shortly before dissolving starts
+    const warningTime = Math.max(config.dissolveDelay - 1000, 500);
     setTimeout(() => {
         timerWarning.classList.add('visible');
-    }, config.dissolveDelay - 1500);
+    }, warningTime);
 
     // Schedule dissolving for each character
     chars.forEach((char, i) => {

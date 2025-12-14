@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hostile Interfaces | Bad UX Games</title>
-    <meta name="description" content="An anthology of 11 intentionally terrible UI games. Bad UX is the mechanic - consent dialogs, password hell, CAPTCHA nightmares, and more. Victory comes from understanding hidden rules.">
+    <meta name="description" content="An anthology of 10 intentionally terrible UI games. Bad UX is the mechanic - consent dialogs, password hell, CAPTCHA nightmares, and more. Victory comes from understanding hidden rules.">
     <meta name="keywords" content="hostile interfaces, bad UX games, UI games, dark patterns, game design, browser games, password simulator, CAPTCHA game">
     <meta name="author" content="Josh Duffy">
     <meta name="robots" content="index, follow">
@@ -12,7 +12,7 @@
 
     <!-- Open Graph -->
     <meta property="og:title" content="Hostile Interfaces | Bad UX Games">
-    <meta property="og:description" content="An anthology of 11 intentionally terrible UI games. Bad UX is the mechanic. Victory comes from understanding hidden rules.">
+    <meta property="og:description" content="An anthology of 10 intentionally terrible UI games. Bad UX is the mechanic. Victory comes from understanding hidden rules.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hostile.joshduffy.dev">
     <meta property="og:site_name" content="Hostile Interfaces">
@@ -21,7 +21,7 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Hostile Interfaces | Bad UX Games">
-    <meta name="twitter:description" content="An anthology of 11 intentionally terrible UI games. Bad UX is the mechanic. Victory comes from understanding hidden rules.">
+    <meta name="twitter:description" content="An anthology of 10 intentionally terrible UI games. Bad UX is the mechanic. Victory comes from understanding hidden rules.">
 
     <link rel="canonical" href="https://hostile.joshduffy.dev">
     <link rel="stylesheet" href="style.css">
@@ -77,6 +77,26 @@
             color: rgba(255,255,255,0.5);
             margin-top: 20px;
             font-style: italic;
+        }
+
+        .header-nav {
+            margin-top: 30px;
+        }
+
+        .header-nav a {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            padding: 10px 24px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .header-nav a:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
         }
 
         .game-grid {
@@ -251,6 +271,9 @@
         <h1>HOSTILE INTERFACES</h1>
         <p class="subtitle">An anthology of intentionally terrible user experiences</p>
         <p class="tagline">The system is correct. The user is wrong.</p>
+        <div class="header-nav">
+            <a href="blog/">Design Notes</a>
+        </div>
     </div>
 
     <div class="philosophy">
@@ -327,17 +350,6 @@
             </div>
         </a>
 
-        <a href="games/two-factor-dungeon/index.html" class="game-card">
-            <span class="featured-badge">FEATURED</span>
-            <div class="game-icon">🔑</div>
-            <h3>Two-Factor Dungeon</h3>
-            <p>Log in using two-factor authentication. The correct method changes based on your failures.</p>
-            <div class="game-meta">
-                <span class="difficulty-hard">● Hard</span>
-                <span>~6 min</span>
-            </div>
-        </a>
-
         <a href="games/unsubscribe-maze/index.html" class="game-card">
             <span class="featured-badge">FEATURED</span>
             <div class="game-icon">🚪</div>
@@ -397,6 +409,7 @@
                 <span>~3 min</span>
             </div>
         </a>
+
     </div>
 
     <footer>
