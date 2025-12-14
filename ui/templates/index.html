@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Generator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            background: #444;
+        }
+
+        .status-dot.connected {
+            background: #22c55e;
+        }
+
+        .main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: #141414;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #222;
+        }
+
+        .panel h2 {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+
+        textarea, input, select {
+            width: 100%;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        button {
+            width: 100%;
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.875rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button:disabled {
+            background: #333;
+            cursor: not-allowed;
+        }
+
+        .image-container {
+            aspect-ratio: 1;
+            background: #0a0a0a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .placeholder {
+            color: #444;
+            font-size: 0.875rem;
+        }
+
+        .progress {
+            margin-top: 1rem;
+            text-align: center;
+            color: #888;
+            font-size: 0.875rem;
+        }
+
+        .progress.generating {
+            color: #3b82f6;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #333;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .presets {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .preset {
+            background: #222;
+            border: 1px solid #333;
+            color: #888;
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        .image-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .image-actions button {
+            flex: 1;
+            background: #222;
+            padding: 0.625rem;
+            font-size: 0.875rem;
+        }
+
+        .image-actions button:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Image Generator <span class="status-dot" id="statusDot"></span></h1>
+        </header>
+
+        <div class="main">
+            <div class="panel">
+                <h2>Prompt</h2>
+
+                <div class="presets">
+                    <span class="preset" data-prompt="a beautiful mountain landscape at sunset, golden hour, detailed, masterpiece">Landscape</span>
+                    <span class="preset" data-prompt="portrait of a person, professional photography, studio lighting, sharp focus">Portrait</span>
+                    <span class="preset" data-prompt="cyberpunk city at night, neon lights, rain, futuristic, detailed">Cyberpunk</span>
+                    <span class="preset" data-prompt="fantasy castle on a cliff, dramatic sky, epic, detailed illustration">Fantasy</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="prompt">What do you want to create?</label>
+                    <textarea id="prompt" placeholder="Describe your image...">a beautiful mountain landscape at sunset, golden hour, detailed, masterpiece</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="negative">Negative prompt</label>
+                    <textarea id="negative" style="min-height: 60px;">blurry, low quality, distorted, ugly, bad anatomy, watermark, text</textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="size">Size</label>
+                        <select id="size">
+                            <option value="1024x1024" selected>1024 × 1024</option>
+                            <option value="1152x896">1152 × 896 (landscape)</option>
+                            <option value="896x1152">896 × 1152 (portrait)</option>
+                            <option value="768x768">768 × 768 (fast)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="steps">Steps</label>
+                        <select id="steps">
+                            <option value="15">15 (fast)</option>
+                            <option value="20" selected>20 (balanced)</option>
+                            <option value="30">30 (quality)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="generateBtn" onclick="generate()">Generate Image</button>
+
+                <div class="progress" id="progress"></div>
+            </div>
+
+            <div class="panel">
+                <h2>Result</h2>
+
+                <div class="image-container" id="imageContainer">
+                    <span class="placeholder">Your image will appear here</span>
+                </div>
+
+                <div class="image-actions" id="imageActions" style="display: none;">
+                    <button onclick="downloadImage()">Download</button>
+                    <button onclick="openFullSize()">Full Size</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentImage = null;
+        let pollInterval = null;
+
+        // Check ComfyUI connection
+        async function checkHealth() {
+            try {
+                const res = await fetch('/health');
+                const data = await res.json();
+                const dot = document.getElementById('statusDot');
+                dot.classList.toggle('connected', data.comfyui === 'connected');
+            } catch (e) {
+                document.getElementById('statusDot').classList.remove('connected');
+            }
+        }
+
+        // Preset buttons
+        document.querySelectorAll('.preset').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('prompt').value = btn.dataset.prompt;
+            });
+        });
+
+        async function generate() {
+            const btn = document.getElementById('generateBtn');
+            const progress = document.getElementById('progress');
+
+            const prompt = document.getElementById('prompt').value;
+            const negative = document.getElementById('negative').value;
+            const [width, height] = document.getElementById('size').value.split('x').map(Number);
+            const steps = parseInt(document.getElementById('steps').value);
+
+            btn.disabled = true;
+            progress.className = 'progress generating';
+            progress.innerHTML = '<span class="spinner"></span>Starting generation...';
+
+            try {
+                const res = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, negative, width, height, steps, cfg: 7.5 })
+                });
+
+                const data = await res.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                // Poll for completion
+                pollForResult(data.prompt_id);
+
+            } catch (e) {
+                progress.className = 'progress';
+                progress.textContent = 'Error: ' + e.message;
+                btn.disabled = false;
+            }
+        }
+
+        async function pollForResult(promptId) {
+            const progress = document.getElementById('progress');
+            const btn = document.getElementById('generateBtn');
+            let elapsed = 0;
+
+            pollInterval = setInterval(async () => {
+                elapsed += 2;
+                progress.innerHTML = `<span class="spinner"></span>Generating... (${elapsed}s)`;
+
+                try {
+                    const res = await fetch(`/status/${promptId}`);
+                    const data = await res.json();
+
+                    if (data.status === 'complete') {
+                        clearInterval(pollInterval);
+                        showImage(data.filename);
+                        progress.className = 'progress';
+                        progress.textContent = `Complete in ${elapsed}s`;
+                        btn.disabled = false;
+                    } else if (data.status === 'error') {
+                        throw new Error(data.error);
+                    }
+                } catch (e) {
+                    clearInterval(pollInterval);
+                    progress.className = 'progress';
+                    progress.textContent = 'Error: ' + e.message;
+                    btn.disabled = false;
+                }
+            }, 2000);
+        }
+
+        function showImage(filename) {
+            currentImage = filename;
+            const container = document.getElementById('imageContainer');
+            container.innerHTML = `<img src="/image/${filename}" alt="Generated image">`;
+            document.getElementById('imageActions').style.display = 'flex';
+        }
+
+        function downloadImage() {
+            if (currentImage) {
+                const a = document.createElement('a');
+                a.href = `/image/${currentImage}`;
+                a.download = currentImage;
+                a.click();
+            }
+        }
+
+        function openFullSize() {
+            if (currentImage) {
+                window.open(`/image/${currentImage}`, '_blank');
+            }
+        }
+
+        // Initial health check
+        checkHealth();
+        setInterval(checkHealth, 10000);
+    </script>
+</body>
+</html>
