@@ -592,6 +592,10 @@
         }
     });
 
+    // Button click handlers
+    submitBtn.addEventListener('click', submitEmail);
+    replayBtn.addEventListener('click', replayEmail);
+
     // Load voices (needed for some browsers)
     if (speechSynth) {
         speechSynth.getVoices();
